@@ -102,7 +102,6 @@ r6-siege-tracker/
 │   └── index.html        # Web dashboard frontend
 ├── requirements.txt       # Python dependencies
 ├── README.md             # This file
-├── LICENSE               # MIT License
 └── .gitignore           # Git ignore rules
 ```
 
@@ -207,10 +206,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## ⚠️ Disclaimer
 
 This tool is for **educational purposes only**. It scrapes publicly available data from R6 Tracker. Please use responsibly and respect R6 Tracker's terms of service. The authors are not responsible for any misuse of this tool.
@@ -222,12 +217,6 @@ This tool is for **educational purposes only**. It scrapes publicly available da
 - [R6 Tracker](https://r6.tracker.network) for providing the data
 - [Ubisoft](https://www.ubisoft.com) for Rainbow Six Siege
 - Flask, Selenium, and Bootstrap communities
-
-## 📧 Contact
-
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-
-Project Link: [https://github.com/yourusername/r6-siege-tracker](https://github.com/yourusername/r6-siege-tracker)
 
 ---
 
