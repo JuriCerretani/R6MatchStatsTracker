@@ -2,8 +2,6 @@
 
 A real-time web dashboard that scrapes player statistics from [R6 Tracker](https://r6.tracker.network) and displays them in a beautiful, interactive interface. Built with Python (Flask + Selenium) and vanilla JavaScript.
 
-![Dashboard Preview](https://via.placeholder.com/800x400/121212/E0E0E0?text=R6+Siege+Dashboard+Preview)
-
 ## ✨ Features
 
 - **⚡ Ultra-Fast Parallel Scraping**: 20 simultaneous browser sessions (10 for overview + 10 for operators)
@@ -33,7 +31,7 @@ A real-time web dashboard that scrapes player statistics from [R6 Tracker](https
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/r6-siege-tracker.git
+git clone https://github.com/JuriCerretani/R6MatchStatsTracker
 cd r6-siege-tracker
 ```
 
