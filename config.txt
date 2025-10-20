@@ -1,0 +1,19 @@
+[main]
+platform: psn
+username: Conitech1-_-
+
+[ally1]
+platform: psn
+username: Snitch_Ciosba141
+
+[ally2]
+platform: 
+username: 
+
+[ally3]
+platform: 
+username: 
+
+[ally4]
+platform: 
+username: 
