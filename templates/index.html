@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R6 SIEGE | Player Stats Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #E0E0E0; 
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 0.5px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 1rem !important;
+        }
+        .main-container {
+            background-color: #1c1c1c; 
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+            max-width: 98%; 
+            padding: 1rem !important; 
+        }
+        .header-r6 {
+            color: #FF4500; 
+            font-size: 2.2rem;
+            border-bottom: 2px solid #FF4500;
+            padding-bottom: 5px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-edit-players {
+            background-color: #FF4500;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-edit-players:hover {
+            background-color: #FF6347;
+            transform: scale(1.05);
+        }
+        .col-five {
+            width: 20%; 
+            padding: 0.3rem !important; 
+        }
+        .player-card {
+            background-color: #242424;
+            border: 1px solid #3a3a3a;
+            border-left: 5px solid #00BFFF;
+            padding: 0.5rem; 
+            height: 100%;
+            transition: all 0.3s;
+            line-height: 1.1;
+        }
+        .player-card.main-player {
+            border-left: 5px solid #FF4500;
+            background-color: #303030;
+        }
+        .player-card.enemy-player {
+            border-left: 5px solid #FF6347;
+        }
+        
+        .stat-value {
+            font-size: 1rem; 
+            font-weight: 700;
+            color: #00FF7F;
+        }
+        .stat-good {
+            color: #00FF7F !important;
+        }
+        .stat-bad {
+            color: #FF4444 !important;
+        }
+        
+        .stat-label {
+            font-size: 0.6rem; 
+            color: #A0A0A0;
+            text-transform: uppercase;
+        }
+        .card-header-compact {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .card-header-compact img {
+            width: 30px; 
+            height: 30px;
+            margin-right: 5px;
+        }
+        .card-header-compact .name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFF;
+            flex-grow: 1;
+        }
+        .card-header-compact .rp-value {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #00FF7F;
+        }
+        .team-title {
+            color: #FF6347; 
+            font-size: 1.2rem; 
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .extra-stats {
+            padding-top: 0.5rem;
+            border-top: 1px dashed #4a4a4a;
+        }
+        .operator-list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-wrap: wrap;
+        }
+        .operator-list li {
+            font-size: 0.55rem;
+            color: #FFD700;
+            text-align: center;
+            flex: 0 0 48%;
+            margin: 2px 0;
+            padding: 3px;
+            background-color: #1a1a1a;
+            border-radius: 3px;
+            border: 1px solid #333;
+        }
+        .operator-list li img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-bottom: 2px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .operator-stat {
+            font-size: 0.5rem;
+            color: #888;
+            margin-top: 1px;
+        }
+        .operator-name {
+            font-weight: bold;
+            color: #FFD700;
+            font-size: 0.6rem;
+        }
+        
+        .match-table-container {
+            margin-top: 0.3rem;
+        }
+        .match-table {
+            width: 100%;
+            border: 1px solid #3a3a3a;
+            border-collapse: collapse;
+        }
+        .match-table th {
+            text-align: center;
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #4a4a4a;
+            padding: 2px;
+            font-size: 0.5rem;
+            color: #888;
+        }
+        .match-table td {
+            text-align: center;
+            border-bottom: 1px solid #2a2a2a;
+            padding: 2px;
+            font-size: 0.55rem;
+        }
+        .match-table tbody tr:hover {
+            background-color: #2a2a2a;
+        }
+        .best-rank-img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 3px;
+        }
+
+        .placeholder-text {
+            background-color: #4a4a4a;
+            color: transparent;
+            display: inline-block;
+            border-radius: 3px;
+        }
+        .placeholder-glow {
+            animation: glow-animation 1.5s infinite alternate;
+        }
+        @keyframes glow-animation {
+            from { background-color: #242424; }
+            to { background-color: #333333; }
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #1c1c1c;
+            border: 2px solid #FF4500;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 10px;
+        }
+        .modal-header {
+            color: #FF4500;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #FF4500;
+            padding-bottom: 0.5rem;
+        }
+        .player-input-group {
+            background-color: #242424;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #00BFFF;
+            border-radius: 5px;
+        }
+        .player-input-group.enemy {
+            border-left-color: #FF6347;
+        }
+        .player-input-group label {
+            color: #A0A0A0;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .player-input-group input, .player-input-group select {
+            background-color: #333;
+            border: 1px solid #555;
+            color: #E0E0E0;
+            padding: 0.5rem;
+            width: 100%;
+            border-radius: 3px;
+            font-family: 'Oswald', sans-serif;
+        }
+        .player-input-group input:focus, .player-input-group select:focus {
+            outline: none;
+            border-color: #FF4500;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .btn-save, .btn-cancel {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Oswald', sans-serif;
+        }
+        .btn-save {
+            background-color: #00FF7F;
+            color: #121212;
+        }
+        .btn-save:hover {
+            background-color: #00CC66;
+            transform: scale(1.02);
+        }
+        .btn-cancel {
+            background-color: #666;
+            color: #E0E0E0;
+        }
+        .btn-cancel:hover {
+            background-color: #888;
+        }
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .input-row input {
+            flex: 2;
+        }
+        .input-row select {
+            flex: 1;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center">
+
+    <div class="container-fluid main-container">
+        
+        <div class="header-r6">
+            <span>R6 SIEGE MATCH DASHBOARD</span>
+            <button class="btn-edit-players" onclick="openEditModal()">✏️ EDIT PLAYERS</button>
+        </div>
+        
+        <div id="alert-box" class="alert alert-info text-center py-1" role="alert">
+            Loading statistics... (Scraping from R6 Tracker)
+        </div>
+
+        <h3 class="team-title d-flex justify-content-between align-items-center">
+            ALLIES 
+            <span class="badge bg-success float-end rounded-0">5 PLAYERS</span>
+        </h3>
+        <div class="row g-0" id="team-allies-row">
+        </div>
+
+        <h3 class="team-title d-flex justify-content-between align-items-center">
+            ENEMIES 
+            <span class="badge bg-danger float-end rounded-0">5 PLAYERS</span>
+        </h3>
+        <div class="row g-0" id="team-enemies-row">
+        </div>
+        
+        <p id="source-info" class="text-secondary text-center mt-3 small"></p>
+
+    </div>
+
+    <!-- Modal for editing players -->
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-header">EDIT PLAYER CONFIGURATION</h2>
+            
+            <h4 style="color: #00BFFF; margin-bottom: 1rem;">ALLIES (max 4)</h4>
+            <div id="allies-inputs">
+                <!-- Generated dynamically -->
+            </div>
+            
+            <h4 style="color: #FF6347; margin-top: 2rem; margin-bottom: 1rem;">ENEMIES (max 5)</h4>
+            <div id="enemies-inputs">
+                <!-- Generated dynamically -->
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn-save" onclick="saveAndRescrape()">💾 SAVE & UPDATE DATA</button>
+                <button class="btn-cancel" onclick="closeEditModal()">✖ CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentData = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generatePlayerCards(getPlaceholderData(), true);
+            generatePlayerCards(getPlaceholderData(true), false);
+            fetchData();
+        });
+
+        function getPlaceholderData(isEnemy = false) {
+            const placeholder = isEnemy ? "ENEMY XX" : "ALLY XX";
+            return {
+                isPlaceholder: true,
+                username: placeholder,
+                platform: isEnemy ? "PC" : "PSN",
+                'Rank Points': '<span class="placeholder-text">3,700</span>',
+                'Season K/D': '<span class="placeholder-text">1.X</span>',
+                'Season Win Rate': '<span class="placeholder-text">6X%</span>',
+                'Level': '<span class="placeholder-text">XXX</span>',
+                'Time Played': '<span class="placeholder-text">XXKh</span>',
+                'Season Matches': '<span class="placeholder-text">XX</span>',
+                'Rank Image URL': 'https://placehold.co/30x30/242424/E0E0E0?text=R',
+                'Best Rank Name': '<span class="placeholder-text">RANK</span>',
+                'Best Rank Image URL': '',
+                'Top Operators': [],
+                'Last Matches': [],
+                'id': 0 
+            };
+        }
+        
+        async function fetchData() {
+            try {
+                document.getElementById('alert-box').className = 'alert alert-info text-center py-1';
+                document.getElementById('alert-box').textContent = 'Scraping in progress for all players... Please wait...';
+                
+                const response = await fetch('/api/scrape_data');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentData = data;
+                    
+                    document.getElementById('alert-box').className = 'alert alert-success text-center py-1';
+                    
+                    const mainOk = data.main && !data.main.error;
+                    const alliesOk = data.allies.filter(a => !a.error).length;
+                    const enemiesOk = data.enemies.filter(e => !e.error).length;
+                    const total = (mainOk ? 1 : 0) + alliesOk + enemiesOk;
+                    const totalConfigured = 1 + data.allies.length + data.enemies.length;
+                    
+                    document.getElementById('alert-box').textContent = 
+                        `Scraping completed! ${total}/${totalConfigured} players loaded successfully.`;
+                    
+                    if (data.main && data.main.tracker_url) {
+                        document.getElementById('source-info').innerHTML = 
+                            `Data from <a href="${data.main.tracker_url}" target="_blank" class="text-info">R6 Tracker</a>.`;
+                    }
+
+                    updateAllCards(data);
+
+                } else {
+                    document.getElementById('alert-box').className = 'alert alert-danger text-center py-1';
+                    document.getElementById('alert-box').innerHTML = `<strong>ERROR:</strong> Unable to complete scraping.`;
+                }
+
+            } catch (error) {
+                document.getElementById('alert-box').className = 'alert alert-danger text-center py-1';
+                document.getElementById('alert-box').innerHTML = `Unable to connect to Python server: ${error}`;
+            }
+        }
+
+        function openEditModal() {
+            // Generate form for allies
+            const alliesDiv = document.getElementById('allies-inputs');
+            alliesDiv.innerHTML = '';
+            
+            for (let i = 1; i <= 4; i++) {
+                const ally = currentData && currentData.allies && currentData.allies[i-1] 
+                    ? currentData.allies[i-1] 
+                    : { username: '', platform: 'psn' };
+                
+                alliesDiv.innerHTML += `
+                    <div class="player-input-group">
+                        <label>Ally ${i}</label>
+                        <div class="input-row">
+                            <input type="text" id="ally${i}-username" placeholder="Username (empty to skip)" value="${ally.username || ''}">
+                            <select id="ally${i}-platform">
+                                <option value="psn" ${ally.platform === 'psn' ? 'selected' : ''}>PSN</option>
+                                <option value="xbox" ${ally.platform === 'xbox' ? 'selected' : ''}>Xbox</option>
+                                <option value="ubisoft" ${ally.platform === 'ubisoft' ? 'selected' : ''}>Ubisoft</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Generate form for enemies
+            const enemiesDiv = document.getElementById('enemies-inputs');
+            enemiesDiv.innerHTML = '';
+            
+            for (let i = 1; i <= 5; i++) {
+                const enemy = currentData && currentData.enemies && currentData.enemies[i-1]
+                    ? currentData.enemies[i-1]
+                    : { username: '', platform: 'psn' };
+                
+                enemiesDiv.innerHTML += `
+                    <div class="player-input-group enemy">
+                        <label>Enemy ${i}</label>
+                        <div class="input-row">
+                            <input type="text" id="enemy${i}-username" placeholder="Username (empty to skip)" value="${enemy.username || ''}">
+                            <select id="enemy${i}-platform">
+                                <option value="psn" ${enemy.platform === 'psn' ? 'selected' : ''}>PSN</option>
+                                <option value="xbox" ${enemy.platform === 'xbox' ? 'selected' : ''}>Xbox</option>
+                                <option value="ubisoft" ${enemy.platform === 'ubisoft' ? 'selected' : ''}>Ubisoft</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        async function saveAndRescrape() {
+            // Collect data from form
+            const allies = [];
+            for (let i = 1; i <= 4; i++) {
+                const username = document.getElementById(`ally${i}-username`).value.trim();
+                const platform = document.getElementById(`ally${i}-platform`).value;
+                if (username) {
+                    allies.push({ username, platform });
+                }
+            }
+            
+            const enemies = [];
+            for (let i = 1; i <= 5; i++) {
+                const username = document.getElementById(`enemy${i}-username`).value.trim();
+                const platform = document.getElementById(`enemy${i}-platform`).value;
+                if (username) {
+                    enemies.push({ username, platform });
+                }
+            }
+            
+            const payload = {
+                allies: allies,
+                enemies: enemies,
+                save_to_config: false
+            };
+            
+            console.log('📤 Sending configuration:', payload);
+            
+            // Send to server
+            try {
+                const response = await fetch('/api/update_players', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                console.log('📥 Response status:', response.status);
+                console.log('📥 Response headers:', response.headers.get('Content-Type'));
+                
+                // Verify it's JSON
+                const contentType = response.headers.get('Content-Type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const textResponse = await response.text();
+                    console.error('❌ Response is not JSON:', textResponse.substring(0, 500));
+                    alert('Server error: invalid response. Check browser console and Python terminal.');
+                    return;
+                }
+                
+                const result = await response.json();
+                console.log('📥 Response data:', result);
+                
+                if (result.success) {
+                    console.log('✓ Configuration updated:', result);
+                    closeEditModal();
+                    
+                    // Reset cards with placeholders
+                    document.getElementById('team-allies-row').innerHTML = '';
+                    document.getElementById('team-enemies-row').innerHTML = '';
+                    generatePlayerCards(getPlaceholderData(), true);
+                    generatePlayerCards(getPlaceholderData(true), false);
+                    
+                    // Recall scraping
+                    fetchData();
+                } else {
+                    alert('Update error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('❌ Complete error:', error);
+                alert('Connection error: ' + error.message + '\n\nCheck browser console (F12) for more details.');
+            }
+        }
+        
+        function updateAllCards(data) {
+            if (data.main) {
+                updateCard(1, data.main, true);
+            }
+            
+            data.allies.forEach((ally, index) => {
+                const cardId = index + 2;
+                updateCard(cardId, ally, false);
+            });
+            
+            data.enemies.forEach((enemy, index) => {
+                const cardId = index + 6;
+                updateCard(cardId, enemy, false);
+            });
+            
+            console.log('[DEBUG] All cards updated:', data);
+        }
+        
+        function getColorClass(value, threshold, isPercentage = false) {
+            if (!value || value === 'N/A') return '';
+            
+            let numValue;
+            if (isPercentage) {
+                numValue = parseFloat(value.replace('%', ''));
+            } else {
+                numValue = parseFloat(value);
+            }
+            
+            if (isNaN(numValue)) return '';
+            
+            return numValue >= threshold ? 'stat-good' : 'stat-bad';
+        }
+        
+        function updateCard(cardId, playerData, isMainPlayer) {
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card) {
+                console.warn(`[WARNING] Card ${cardId} not found`);
+                return;
+            }
+
+            if (playerData.error) {
+                card.classList.remove('placeholder-glow');
+                card.querySelector('.name').innerHTML = 
+                    `${playerData.username.toUpperCase()} <span class="text-danger">(ERROR)</span>`;
+                card.querySelector(`#rp-value-${cardId}`).innerHTML = '<span class="text-danger">N/A</span>';
+                console.error(`[ERROR] Card ${cardId}: ${playerData.error}`);
+                return;
+            }
+
+            card.classList.remove('placeholder-glow');
+            
+            const nameDisplay = isMainPlayer 
+                ? `${playerData.username.toUpperCase()} <span class="text-secondary">(${playerData.platform.toUpperCase()})</span>`
+                : `${playerData.username.toUpperCase()} <span class="text-secondary" style="font-size: 0.7rem;">(${playerData.platform.toUpperCase()})</span>`;
+            
+            card.querySelector('.name').innerHTML = nameDisplay;
+            
+            if (playerData['Rank Image URL']) {
+                card.querySelector('.rank-image').src = playerData['Rank Image URL'];
+            }
+            
+            card.querySelector(`#rp-value-${cardId}`).textContent = playerData['Rank Points'] || 'N/A';
+            card.querySelector(`#level-value-${cardId}`).textContent = playerData['Level'] || 'N/A';
+            card.querySelector(`#time-played-value-${cardId}`).textContent = playerData['Time Played'] || 'N/A';
+            card.querySelector(`#season-matches-value-${cardId}`).textContent = playerData['Season Matches'] || 'N/A';
+            
+            const kdElement = card.querySelector(`#kd-value-${cardId}`);
+            const kdValue = playerData['Season K/D'] || 'N/A';
+            kdElement.textContent = kdValue;
+            kdElement.className = 'stat-value ' + getColorClass(kdValue, 1, false);
+            
+            const winElement = card.querySelector(`#win-percent-value-${cardId}`);
+            const winValue = playerData['Season Win Rate'] || 'N/A';
+            winElement.textContent = winValue;
+            winElement.className = 'stat-value ' + getColorClass(winValue, 50, true);
+            
+            const bestRankContainer = card.querySelector(`#best-rank-value-${cardId}`);
+            if (playerData['Best Rank Name'] && playerData['Best Rank Name'] !== 'N/A') {
+                let bestRankHtml = '';
+                if (playerData['Best Rank Image URL']) {
+                    bestRankHtml += `<img src="${playerData['Best Rank Image URL']}" class="best-rank-img" alt="${playerData['Best Rank Name']}">`;
+                }
+                const rankNameShort = playerData['Best Rank Name'].split(' ').slice(0, 2).join(' ');
+                bestRankHtml += `<span style="font-size: 0.65rem;">${rankNameShort}</span>`;
+                bestRankContainer.innerHTML = bestRankHtml;
+            } else {
+                bestRankContainer.textContent = 'N/A';
+            }
+            
+            const topOpsList = card.querySelector(`#top-ops-list-${cardId}`);
+            topOpsList.innerHTML = '';
+            
+            if (playerData['Top Operators'] && playerData['Top Operators'].length > 0) {
+                playerData['Top Operators'].forEach(op => {
+                    const opHtml = `
+                        <li>
+                            ${op['Image URL'] ? `<img src="${op['Image URL']}" alt="${op.Name}">` : ''}
+                            <div class="operator-name">${op.Name}</div>
+                            <div class="operator-stat">R: ${op['Rounds Played'] || 'N/A'}</div>
+                            <div class="operator-stat">K/D: ${op['K/D'] || 'N/A'}</div>
+                            <div class="operator-stat">W: ${op['Win %'] || 'N/A'} | HS: ${op['HS %'] || 'N/A'}</div>
+                        </li>
+                    `;
+                    topOpsList.innerHTML += opHtml;
+                });
+            } else {
+                topOpsList.innerHTML = '<li style="font-size: 0.65rem; width: 100%;">N/A</li>';
+            }
+            
+            const matchTable = card.querySelector(`#match-table-${cardId} tbody`);
+            matchTable.innerHTML = '';
+            
+            if (playerData['Last Matches'] && playerData['Last Matches'].length > 0) {
+                playerData['Last Matches'].forEach(match => {
+                    const result = match.Result || '?';
+                    const resultClass = result === 'Win' ? 'text-success' : (result === 'Loss' ? 'text-danger' : 'text-secondary');
+                    const resultIcon = result === 'Win' ? '✓' : (result === 'Loss' ? '✗' : '?');
+                    const mapShort = (match.Map || 'N/A').substring(0, 8);
+                    const score = match.Score || 'N/A';
+                    const kd = match['K/D'] || 'N/A';
+                    
+                    const kdColorClass = getColorClass(kd, 1, false);
+                    
+                    const tooltip = `${match.Map} | ${match.Mode} | KDA: ${match.Kills}/${match.Deaths}/${match.Assists} | HS: ${match['HS%']}`;
+                    
+                    matchTable.innerHTML += `
+                        <tr title="${tooltip}">
+                            <td class="${resultClass}" style="font-weight: bold;">${resultIcon}</td>
+                            <td style="color: #FFD700;">${mapShort}</td>
+                            <td style="color: #A0A0A0;">${score}</td>
+                            <td class="${kdColorClass}">${kd}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                matchTable.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.6rem; color: #666; padding: 5px;">N/A</td></tr>';
+            }
+
+            console.log(`[DEBUG] Card ${cardId} updated:`, playerData.username);
+        }
+
+
+        function createCardHTML(playerData, isMainPlayer = false, isEnemy = false, cardId) {
+            const isPlaceholder = playerData.isPlaceholder;
+            const playerClass = isMainPlayer ? 'main-player' : (isEnemy ? 'enemy-player' : '');
+            
+            const nameDisplay = isMainPlayer 
+                ? `${playerData.username.toUpperCase()} <span class="text-secondary">(${playerData.platform.toUpperCase()})</span>` 
+                : playerData.username.toUpperCase();
+            const rankImageUrl = playerData['Rank Image URL'];
+            const rpValue = playerData['Rank Points'];
+            
+            const levelValue = playerData['Level'];
+            const timePlayedValue = playerData['Time Played'];
+            const seasonMatchesValue = playerData['Season Matches'] || '<span class="placeholder-text">XX</span>';
+            const bestRankValue = playerData['Best Rank Name'] || '<span class="placeholder-text">RANK</span>';
+            
+            const kdValue = playerData['Season K/D'] || '<span class="placeholder-text">1.X</span>';
+            const winValue = playerData['Season Win Rate'] || '<span class="placeholder-text">6X%</span>';
+            
+            const topOperators = playerData['Top Operators'] || [];
+            const lastMatches = playerData['Last Matches'] || [];
+            
+            const glowClass = isPlaceholder ? 'placeholder-glow' : '';
+            const placeholderContent = (text, idSuffix) => `<span class="stat-value" id="${idSuffix}-${cardId}">${text}</span>`;
+            
+            let opListHtml = '';
+            if (isPlaceholder || topOperators.length === 0) {
+                opListHtml = '<li style="font-size: 0.65rem;">Op1</li><li style="font-size: 0.65rem;">Op2</li><li style="font-size: 0.65rem;">Op3</li><li style="font-size: 0.65rem;">Op4</li>';
+            } else {
+                opListHtml = topOperators.map(op => `<li style="font-size: 0.65rem;">${op.Name || 'N/A'}</li>`).join('');
+            }
+            
+            let matchTableHtml = '';
+            if (isPlaceholder || lastMatches.length === 0) {
+                matchTableHtml = `<tr><td colspan="4" class="text-center" style="font-size: 0.6rem; color: #666;">Loading...</td></tr>`;
+            } else {
+                matchTableHtml = lastMatches.map(match => {
+                    const result = match.Result || '?';
+                    const resultClass = result === 'Win' ? 'text-success' : (result === 'Loss' ? 'text-danger' : 'text-secondary');
+                    const resultIcon = result === 'Win' ? '✓' : (result === 'Loss' ? '✗' : '?');
+                    return `
+                        <tr>
+                            <td class="${resultClass}" style="font-weight: bold;">${resultIcon}</td>
+                            <td style="color: #FFD700;">?</td>
+                            <td style="color: #A0A0A0;">?</td>
+                            <td>?</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            return `
+                <div class="col-five">
+                    <div class="player-card ${playerClass} ${glowClass}" id="card-${cardId}">
+                        <div class="card-header-compact">
+                            <img src="${rankImageUrl}" alt="Rank" class="rank-image rounded-circle">
+                            <div class="name">${nameDisplay}</div>
+                            <div class="rp-value" id="rp-value-${cardId}">${rpValue}</div>
+                        </div>
+                        
+                        <div class="row text-center compact-stats g-1 mb-2">
+                            <div class="col-4">
+                                ${placeholderContent(levelValue, 'level-value')}
+                                <div class="stat-label">LEVEL</div>
+                            </div>
+                            <div class="col-4">
+                                ${placeholderContent(timePlayedValue, 'time-played-value')}
+                                <div class="stat-label">TIME</div>
+                            </div>
+                            <div class="col-4">
+                                ${placeholderContent(bestRankValue, 'best-rank-value')}
+                                <div class="stat-label">BEST RANK</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row text-center compact-stats g-1 pb-2 border-bottom border-secondary">
+                            <div class="col-4">
+                                ${placeholderContent(kdValue, 'kd-value')}
+                                <div class="stat-label">K/D</div>
+                            </div>
+                            <div class="col-4">
+                                ${placeholderContent(winValue, 'win-percent-value')}
+                                <div class="stat-label">WIN %</div>
+                            </div>
+                            <div class="col-4">
+                                ${placeholderContent(seasonMatchesValue, 'season-matches-value')}
+                                <div class="stat-label">MATCHES</div>
+                            </div>
+                        </div>
+
+                        <div class="extra-stats">
+                            <div class="stat-label text-center mb-1">TOP 4 OPERATORS</div>
+                            <ul class="operator-list" id="top-ops-list-${cardId}">
+                                ${opListHtml}
+                            </ul>
+                            
+                            <div class="stat-label text-center mt-2 mb-1">LAST 4 MATCHES</div>
+                            <div class="match-table-container">
+                                <table class="match-table" id="match-table-${cardId}">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%;">R</th>
+                                            <th style="width: 35%;">MAP</th>
+                                            <th style="width: 25%;">SCORE</th>
+                                            <th style="width: 25%;">K/D</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${matchTableHtml}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generatePlayerCards(templateData, isAllies) {
+            const rowElement = isAllies ? document.getElementById('team-allies-row') : document.getElementById('team-enemies-row');
+            
+            for (let i = 1; i <= 5; i++) {
+                let cardData = JSON.parse(JSON.stringify(templateData));
+                let isMain = false;
+                
+                if (isAllies) {
+                    if (i === 1) {
+                        isMain = true;
+                        cardData.username = 'MAIN PLAYER';
+                        cardData.id = 1;
+                    } else {
+                        cardData.username = `ALLY ${i}`;
+                        cardData.id = i;
+                    }
+                } else {
+                    cardData.username = `ENEMY ${i}`;
+                    cardData.id = i + 5;
+                }
+                
+                const cardHtml = createCardHTML(cardData, isMain, !isAllies, cardData.id);
+                rowElement.innerHTML += cardHtml;
+            }
+        }
+
+        // Close modal by clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('editModal');
+            if (e.target === modal) {
+                closeEditModal();
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
