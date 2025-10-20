@@ -29,15 +29,22 @@ A real-time web dashboard that scrapes player statistics from [R6 Tracker](https
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone the repository or Download ZIP file**
 ```bash
 git clone https://github.com/JuriCerretani/R6MatchStatsTracker
-cd r6-siege-tracker
+```
+then move to directory
+```bash
+cd R6MatchStatsTracker-main
 ```
 
 2. **Install dependencies**
 ```bash
 pip install -r requirements.txt
+```
+or
+```bash
+python -m pip install -r requirements.txt
 ```
 
 3. **Create configuration file**
