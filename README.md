@@ -24,11 +24,13 @@ Automatically scrape and display statistics for all 10 players in your Rainbow S
 ### Windows (Recommended)
 
 1. Clone repository:
-```bashgit clone https://github.com/JuriCerretani/R6MatchStatsTracker.git
+```bash
+git clone https://github.com/JuriCerretani/R6MatchStatsTracker.git
 cd R6MatchStatsTracker
 
 2. Run launcher:
-```bashSTART_R6_TRACKER.bat
+```bash
+START_R6_TRACKER.bat
 
 Done! Browser opens automatically.
 
