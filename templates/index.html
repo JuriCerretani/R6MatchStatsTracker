@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             background-color: #121212;
             color: #E0E0E0; 
@@ -14,54 +18,91 @@
             letter-spacing: 0.5px;
             min-height: 100vh;
             overflow-x: hidden;
-            padding: 1rem !important;
+            padding: 0.5rem !important;
+            margin: 0;
         }
+        
         .main-container {
             background-color: #1c1c1c; 
             box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
-            max-width: 98%; 
-            padding: 1rem !important; 
+            max-width: 100%; 
+            padding: 0.5rem !important;
+            margin: 0 auto;
         }
+        
         .header-r6 {
             color: #FF4500; 
-            font-size: 2.2rem;
+            font-size: 1.5rem;
             border-bottom: 2px solid #FF4500;
             padding-bottom: 5px;
             margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
+        
         .btn-edit-players {
             background-color: #FF4500;
             color: white;
             border: none;
             padding: 0.5rem 1rem;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.3s;
+            white-space: nowrap;
         }
+        
         .btn-edit-players:hover {
             background-color: #FF6347;
             transform: scale(1.05);
         }
-        .col-five {
-            width: 20%; 
-            padding: 0.3rem !important; 
+        
+        /* Responsive grid */
+        .players-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.5rem;
+            width: 100%;
         }
+        
+        @media (min-width: 768px) {
+            .players-row {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .players-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-r6 {
+                font-size: 1.2rem;
+            }
+            
+            .btn-edit-players {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+        
         .player-card {
             background-color: #242424;
             border: 1px solid #3a3a3a;
             border-left: 5px solid #00BFFF;
             padding: 0.5rem; 
-            height: 100%;
             transition: all 0.3s;
             line-height: 1.1;
+            position: relative;
         }
+        
         .player-card.main-player {
             border-left: 5px solid #FF4500;
             background-color: #303030;
         }
+        
         .player-card.enemy-player {
             border-left: 5px solid #FF6347;
         }
@@ -71,9 +112,11 @@
             font-weight: 700;
             color: #00FF7F;
         }
+        
         .stat-good {
             color: #00FF7F !important;
         }
+        
         .stat-bad {
             color: #FF4444 !important;
         }
@@ -83,30 +126,52 @@
             color: #A0A0A0;
             text-transform: uppercase;
         }
+        
         .card-header-compact {
             display: flex;
             align-items: center;
             margin-bottom: 0.5rem;
+            gap: 5px;
         }
+        
         .card-header-compact img {
             width: 30px; 
             height: 30px;
-            margin-right: 5px;
         }
+        
         .card-header-compact .name {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #FFF;
             flex-grow: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
+        
         .card-header-compact .rp-value {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             color: #00FF7F;
         }
+        
+        .btn-refresh {
+            background: none;
+            border: none;
+            color: #00FF7F;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+        }
+        
+        .btn-refresh:hover {
+            color: #00FF00;
+            transform: scale(1.2);
+        }
+        
         .team-title {
             color: #FF6347; 
-            font-size: 1.2rem; 
+            font-size: 1rem; 
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
         }
@@ -115,6 +180,7 @@
             padding-top: 0.5rem;
             border-top: 1px dashed #4a4a4a;
         }
+        
         .operator-list {
             display: flex;
             justify-content: space-around;
@@ -123,6 +189,7 @@
             margin: 0;
             flex-wrap: wrap;
         }
+        
         .operator-list li {
             font-size: 0.55rem;
             color: #FFD700;
@@ -134,6 +201,7 @@
             border-radius: 3px;
             border: 1px solid #333;
         }
+        
         .operator-list li img {
             width: 24px;
             height: 24px;
@@ -143,11 +211,13 @@
             margin-left: auto;
             margin-right: auto;
         }
+        
         .operator-stat {
             font-size: 0.5rem;
             color: #888;
             margin-top: 1px;
         }
+        
         .operator-name {
             font-weight: bold;
             color: #FFD700;
@@ -157,11 +227,13 @@
         .match-table-container {
             margin-top: 0.3rem;
         }
+        
         .match-table {
             width: 100%;
             border: 1px solid #3a3a3a;
             border-collapse: collapse;
         }
+        
         .match-table th {
             text-align: center;
             background-color: #1a1a1a;
@@ -170,15 +242,18 @@
             font-size: 0.5rem;
             color: #888;
         }
+        
         .match-table td {
             text-align: center;
             border-bottom: 1px solid #2a2a2a;
             padding: 2px;
             font-size: 0.55rem;
         }
+        
         .match-table tbody tr:hover {
             background-color: #2a2a2a;
         }
+        
         .best-rank-img {
             width: 20px;
             height: 20px;
@@ -192,9 +267,11 @@
             display: inline-block;
             border-radius: 3px;
         }
+        
         .placeholder-glow {
             animation: glow-animation 1.5s infinite alternate;
         }
+        
         @keyframes glow-animation {
             from { background-color: #242424; }
             to { background-color: #333333; }
@@ -208,32 +285,65 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             overflow-y: auto;
+            padding: 1rem;
         }
+        
         .modal-overlay.active {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            padding-top: 2rem;
         }
+        
         .modal-content {
             background-color: #1c1c1c;
             border: 2px solid #FF4500;
-            padding: 2rem;
+            padding: 1.5rem;
             max-width: 800px;
-            width: 90%;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             border-radius: 10px;
         }
+        
+        @media (max-width: 767px) {
+            .modal-content {
+                padding: 1rem;
+            }
+        }
+        
         .modal-header {
             color: #FF4500;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
             border-bottom: 2px solid #FF4500;
             padding-bottom: 0.5rem;
         }
+        
+        .welcome-hint {
+            background: linear-gradient(135deg, #1a4d2a 0%, #2a5a3a 100%);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            text-align: center;
+            border: 2px solid #00FF7F;
+        }
+        
+        .welcome-hint h3 {
+            color: #00FF7F;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+        
+        .welcome-hint p {
+            color: #E0E0E0;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
         .player-input-group {
             background-color: #242424;
             padding: 1rem;
@@ -241,15 +351,18 @@
             border-left: 3px solid #00BFFF;
             border-radius: 5px;
         }
+        
         .player-input-group.enemy {
             border-left-color: #FF6347;
         }
+        
         .player-input-group label {
             color: #A0A0A0;
             font-size: 0.9rem;
             display: block;
             margin-bottom: 0.3rem;
         }
+        
         .player-input-group input, .player-input-group select {
             background-color: #333;
             border: 1px solid #555;
@@ -258,18 +371,24 @@
             width: 100%;
             border-radius: 3px;
             font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
         }
+        
         .player-input-group input:focus, .player-input-group select:focus {
             outline: none;
             border-color: #FF4500;
         }
+        
         .btn-group {
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
+            flex-wrap: wrap;
         }
+        
         .btn-save, .btn-cancel {
             flex: 1;
+            min-width: 150px;
             padding: 0.8rem;
             font-size: 1rem;
             border: none;
@@ -277,35 +396,52 @@
             transition: all 0.3s;
             font-family: 'Oswald', sans-serif;
         }
+        
         .btn-save {
             background-color: #00FF7F;
             color: #121212;
         }
+        
         .btn-save:hover {
             background-color: #00CC66;
             transform: scale(1.02);
         }
+        
         .btn-cancel {
             background-color: #666;
             color: #E0E0E0;
         }
+        
         .btn-cancel:hover {
             background-color: #888;
         }
+        
         .input-row {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             margin-bottom: 0.5rem;
         }
+        
         .input-row input {
             flex: 2;
         }
+        
         .input-row select {
             flex: 1;
         }
+        
+        @media (max-width: 767px) {
+            .input-row {
+                flex-direction: column;
+            }
+            
+            .input-row input, .input-row select {
+                width: 100%;
+            }
+        }
     </style>
 </head>
-<body class="d-flex align-items-center justify-content-center">
+<body>
 
     <div class="container-fluid main-container">
         
@@ -315,22 +451,20 @@
         </div>
         
         <div id="alert-box" class="alert alert-info text-center py-1" role="alert">
-            Loading statistics... (Scraping from R6 Tracker)
+            Loading statistics...
         </div>
 
         <h3 class="team-title d-flex justify-content-between align-items-center">
-            ALLIES 
-            <span class="badge bg-success float-end rounded-0">5 PLAYERS</span>
+            <span>ALLIES</span>
+            <span class="badge bg-success rounded-0" style="font-size: 0.7rem;">5 PLAYERS</span>
         </h3>
-        <div class="row g-0" id="team-allies-row">
-        </div>
+        <div class="players-row" id="team-allies-row"></div>
 
         <h3 class="team-title d-flex justify-content-between align-items-center">
-            ENEMIES 
-            <span class="badge bg-danger float-end rounded-0">5 PLAYERS</span>
+            <span>ENEMIES</span>
+            <span class="badge bg-danger rounded-0" style="font-size: 0.7rem;">5 PLAYERS</span>
         </h3>
-        <div class="row g-0" id="team-enemies-row">
-        </div>
+        <div class="players-row" id="team-enemies-row"></div>
         
         <p id="source-info" class="text-secondary text-center mt-3 small"></p>
 
@@ -341,15 +475,17 @@
         <div class="modal-content">
             <h2 class="modal-header">EDIT PLAYER CONFIGURATION</h2>
             
-            <h4 style="color: #00BFFF; margin-bottom: 1rem;">ALLIES (max 4)</h4>
-            <div id="allies-inputs">
-                <!-- Generated dynamically -->
+            <div class="welcome-hint">
+                <h3>⚡ Quick Start</h3>
+                <p>Your main player and allies are already loaded!</p>
+                <p><strong>Just add the 5 enemies below and click SAVE!</strong></p>
             </div>
             
-            <h4 style="color: #FF6347; margin-top: 2rem; margin-bottom: 1rem;">ENEMIES (max 5)</h4>
-            <div id="enemies-inputs">
-                <!-- Generated dynamically -->
-            </div>
+            <h4 style="color: #00BFFF; margin-bottom: 1rem; font-size: 1rem;">ALLIES (max 4)</h4>
+            <div id="allies-inputs"></div>
+            
+            <h4 style="color: #FF6347; margin-top: 2rem; margin-bottom: 1rem; font-size: 1rem;">ENEMIES (max 5)</h4>
+            <div id="enemies-inputs"></div>
             
             <div class="btn-group">
                 <button class="btn-save" onclick="saveAndRescrape()">💾 SAVE & UPDATE DATA</button>
@@ -359,13 +495,54 @@
     </div>
 
     <script>
-        let currentData = null;
+        let currentData = {
+            main: null,
+            allies: [],
+            enemies: []
+        };
+        
+        let initialConfig = null;
+        
+        // Cache dei dati già caricati (per evitare ricaricamenti)
+        let loadedPlayers = {
+            main: null,
+            allies: {},
+            enemies: {}
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             generatePlayerCards(getPlaceholderData(), true);
             generatePlayerCards(getPlaceholderData(true), false);
-            fetchData();
+            
+            await loadInitialConfig();
+            
+            setTimeout(() => {
+                openEditModal();
+                showWelcomeMessage();
+            }, 500);
         });
+        
+        async function loadInitialConfig() {
+            try {
+                const response = await fetch('/api/get_initial_config');
+                const config = await response.json();
+                
+                initialConfig = config;
+                currentData.main = config.main;
+                currentData.allies = config.allies || [];
+                currentData.enemies = config.enemies || [];
+                
+                console.log('[CONFIG] Loaded initial configuration:', config);
+            } catch (error) {
+                console.error('[CONFIG] Error loading initial config:', error);
+            }
+        }
+        
+        function showWelcomeMessage() {
+            const alertBox = document.getElementById('alert-box');
+            alertBox.className = 'alert alert-info text-center py-1';
+            alertBox.textContent = '👋 Welcome! Add your enemies to start loading stats...';
+        }
 
         function getPlaceholderData(isEnemy = false) {
             const placeholder = isEnemy ? "ENEMY XX" : "ALLY XX";
@@ -388,61 +565,383 @@
             };
         }
         
-        async function fetchData() {
-            try {
-                document.getElementById('alert-box').className = 'alert alert-info text-center py-1';
-                document.getElementById('alert-box').textContent = 'Scraping in progress for all players... Please wait...';
+        function getPlayerKey(type, index) {
+            return `${type}-${index}`;
+        }
+        
+        function hasPlayerChanged(oldPlayer, newPlayer) {
+            if (!oldPlayer || !newPlayer) return true;
+            return oldPlayer.username !== newPlayer.username || oldPlayer.platform !== newPlayer.platform;
+        }
+        
+        async function fetchDataProgressive() {
+            document.getElementById('alert-box').className = 'alert alert-info text-center py-1';
+            document.getElementById('alert-box').textContent = '📊 Analyzing changes...';
+            
+            const playersToLoad = [];
+            
+            // Check main player
+            const mainPlayer = { username: currentData.main.username, platform: currentData.main.platform };
+            if (hasPlayerChanged(loadedPlayers.main, mainPlayer)) {
+                playersToLoad.push({ type: 'main', index: 0, cardId: 1, data: mainPlayer });
+            }
+            
+            // Check allies
+            for (let i = 0; i < 4; i++) {
+                if (currentData.allies[i]) {
+                    const ally = { username: currentData.allies[i].username, platform: currentData.allies[i].platform };
+                    const key = getPlayerKey('ally', i + 1);
+                    if (hasPlayerChanged(loadedPlayers.allies[key], ally)) {
+                        playersToLoad.push({ type: 'ally', index: i + 1, cardId: i + 2, data: ally });
+                    }
+                }
+            }
+            
+            // Check enemies
+            for (let i = 0; i < 5; i++) {
+                if (currentData.enemies[i]) {
+                    const enemy = { username: currentData.enemies[i].username, platform: currentData.enemies[i].platform };
+                    const key = getPlayerKey('enemy', i + 1);
+                    if (hasPlayerChanged(loadedPlayers.enemies[key], enemy)) {
+                        playersToLoad.push({ type: 'enemy', index: i + 1, cardId: i + 6, data: enemy });
+                    }
+                }
+            }
+            
+            if (playersToLoad.length === 0) {
+                document.getElementById('alert-box').className = 'alert alert-success text-center py-1';
+                document.getElementById('alert-box').textContent = '✓ All players already loaded! No changes detected.';
+                return;
+            }
+            
+            console.log(`[SMART LOAD] Loading ${playersToLoad.length} new/changed players`);
+            
+            // PHASE 1: Load all OVERVIEWS first (fast)
+            document.getElementById('alert-box').textContent = `⚡ Phase 1/2: Loading overview data for ${playersToLoad.length} players...`;
+            
+            let overviewLoaded = 0;
+            const BATCH_SIZE = 3;
+            
+            for (let i = 0; i < playersToLoad.length; i += BATCH_SIZE) {
+                const batch = playersToLoad.slice(i, i + BATCH_SIZE);
                 
-                const response = await fetch('/api/scrape_data');
+                const batchPromises = batch.map(player =>
+                    fetchOverviewOnly(player.type, player.index, player.cardId).then(result => {
+                        if (result && !result.error) {
+                            overviewLoaded++;
+                            document.getElementById('alert-box').textContent = 
+                                `⚡ Phase 1/2: ${overviewLoaded}/${playersToLoad.length} overview loaded...`;
+                        }
+                    })
+                );
+                
+                await Promise.all(batchPromises);
+                
+                if (i + BATCH_SIZE < playersToLoad.length) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            }
+            
+            // PHASE 2: Load all OPERATORS (slow)
+            document.getElementById('alert-box').textContent = `🎯 Phase 2/2: Loading operators for ${playersToLoad.length} players...`;
+            
+            let operatorsLoaded = 0;
+            
+            for (let i = 0; i < playersToLoad.length; i += BATCH_SIZE) {
+                const batch = playersToLoad.slice(i, i + BATCH_SIZE);
+                
+                const batchPromises = batch.map(player =>
+                    fetchOperatorsOnly(player.type, player.index, player.cardId).then(result => {
+                        if (result && !result.error) {
+                            operatorsLoaded++;
+                            document.getElementById('alert-box').textContent = 
+                                `🎯 Phase 2/2: ${operatorsLoaded}/${playersToLoad.length} operators loaded...`;
+                        }
+                    })
+                );
+                
+                await Promise.all(batchPromises);
+                
+                if (i + BATCH_SIZE < playersToLoad.length) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            }
+            
+            document.getElementById('alert-box').className = 'alert alert-success text-center py-1';
+            document.getElementById('alert-box').textContent = 
+                `✓ Complete! ${playersToLoad.length} players loaded (${overviewLoaded} overview + ${operatorsLoaded} operators)`;
+            
+            if (currentData.main && currentData.main.tracker_url) {
+                document.getElementById('source-info').innerHTML = 
+                    `Data from <a href="${currentData.main.tracker_url}" target="_blank" class="text-info">R6 Tracker</a>.`;
+            }
+        }
+        
+        async function fetchOverviewOnly(playerType, playerIndex, cardId) {
+            try {
+                console.log(`[OVERVIEW] Fetching ${playerType} #${playerIndex}`);
+                
+                showCardLoading(cardId, 'overview');
+                
+                const response = await fetch(`/api/scrape_overview/${playerType}/${playerIndex}`);
+                
+                if (!response.ok) {
+                    if (response.status === 400) {
+                        hideCardLoading(cardId);
+                        return null;
+                    }
+                    throw new Error('Overview fetch failed');
+                }
+                
                 const data = await response.json();
                 
-                if (response.ok) {
-                    currentData = data;
-                    
-                    document.getElementById('alert-box').className = 'alert alert-success text-center py-1';
-                    
-                    const mainOk = data.main && !data.main.error;
-                    const alliesOk = data.allies.filter(a => !a.error).length;
-                    const enemiesOk = data.enemies.filter(e => !e.error).length;
-                    const total = (mainOk ? 1 : 0) + alliesOk + enemiesOk;
-                    const totalConfigured = 1 + data.allies.length + data.enemies.length;
-                    
-                    document.getElementById('alert-box').textContent = 
-                        `Scraping completed! ${total}/${totalConfigured} players loaded successfully.`;
-                    
-                    if (data.main && data.main.tracker_url) {
-                        document.getElementById('source-info').innerHTML = 
-                            `Data from <a href="${data.main.tracker_url}" target="_blank" class="text-info">R6 Tracker</a>.`;
-                    }
-
-                    updateAllCards(data);
-
-                } else {
-                    document.getElementById('alert-box').className = 'alert alert-danger text-center py-1';
-                    document.getElementById('alert-box').innerHTML = `<strong>ERROR:</strong> Unable to complete scraping.`;
+                if (data.error && data.error_type === '404') {
+                    console.log(`[404] ${playerType} #${playerIndex} - Not found`);
+                    showCardError(cardId, data.username || 'Unknown', '404: Player Not Found');
+                    hideCardLoading(cardId);
+                    return data;
                 }
-
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                console.log(`[✓ OVERVIEW] ${playerType} #${playerIndex} - ${data.username}`);
+                
+                // Update card with overview data (without operators yet)
+                updateCardOverview(cardId, data, playerType === 'main');
+                hideCardLoading(cardId);
+                
+                // Cache the loaded player
+                const playerKey = getPlayerKey(playerType, playerIndex);
+                const playerData = { username: data.username, platform: data.platform };
+                
+                if (playerType === 'main') {
+                    loadedPlayers.main = playerData;
+                } else if (playerType === 'ally') {
+                    loadedPlayers.allies[playerKey] = playerData;
+                } else if (playerType === 'enemy') {
+                    loadedPlayers.enemies[playerKey] = playerData;
+                }
+                
+                return data;
+                
             } catch (error) {
-                document.getElementById('alert-box').className = 'alert alert-danger text-center py-1';
-                document.getElementById('alert-box').innerHTML = `Unable to connect to Python server: ${error}`;
+                console.error(`[ERROR OVERVIEW] ${playerType} #${playerIndex}:`, error);
+                showCardError(cardId, 'Unknown', 'Overview failed');
+                return { error: error.message };
+            }
+        }
+        
+        async function fetchOperatorsOnly(playerType, playerIndex, cardId) {
+            try {
+                console.log(`[OPERATORS] Fetching ${playerType} #${playerIndex}`);
+                
+                showCardLoading(cardId, 'operators');
+                
+                const response = await fetch(`/api/scrape_operators/${playerType}/${playerIndex}`);
+                
+                if (!response.ok) {
+                    if (response.status === 400) {
+                        hideCardLoading(cardId);
+                        return null;
+                    }
+                    throw new Error('Operators fetch failed');
+                }
+                
+                const data = await response.json();
+                
+                console.log(`[✓ OPERATORS] ${playerType} #${playerIndex} - ${data.operators?.length || 0} ops`);
+                
+                // Update only operators section of the card
+                updateCardOperators(cardId, data.operators || []);
+                hideCardLoading(cardId);
+                
+                return data;
+                
+            } catch (error) {
+                console.error(`[ERROR OPERATORS] ${playerType} #${playerIndex}:`, error);
+                // Don't show error for operators - overview is more important
+                hideCardLoading(cardId);
+                return { error: error.message };
+            }
+        }
+        
+        async function refreshPlayer(playerType, playerIndex, cardId) {
+            console.log(`[REFRESH] Manually refreshing ${playerType} #${playerIndex}`);
+            
+            // Clear cache for this player
+            const playerKey = getPlayerKey(playerType, playerIndex);
+            if (playerType === 'main') {
+                loadedPlayers.main = null;
+            } else if (playerType === 'ally') {
+                delete loadedPlayers.allies[playerKey];
+            } else if (playerType === 'enemy') {
+                delete loadedPlayers.enemies[playerKey];
+            }
+            
+            // Reload overview then operators
+            await fetchOverviewOnly(playerType, playerIndex, cardId);
+            await fetchOperatorsOnly(playerType, playerIndex, cardId);
+        }
+        
+        function showCardLoading(cardId, phase = 'overview') {
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card) return;
+            
+            card.classList.add('placeholder-glow');
+            
+            let loadingDiv = card.querySelector('.loading-indicator');
+            if (!loadingDiv) {
+                loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading-indicator';
+                loadingDiv.style.cssText = 'position: absolute; top: 5px; right: 5px; color: #00FF7F; font-size: 0.7rem; z-index: 10;';
+                card.appendChild(loadingDiv);
+            }
+            
+            const icon = phase === 'overview' ? '⚡' : '🎯';
+            loadingDiv.innerHTML = `${icon} Loading...`;
+        }
+        
+        function hideCardLoading(cardId) {
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card) return;
+            
+            card.classList.remove('placeholder-glow');
+            
+            const loadingDiv = card.querySelector('.loading-indicator');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+        }
+        
+        function showCardError(cardId, username, errorMessage) {
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card) return;
+            
+            card.classList.remove('placeholder-glow');
+            
+            const loadingDiv = card.querySelector('.loading-indicator');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+            
+            const nameElem = card.querySelector('.name');
+            if (nameElem) {
+                nameElem.innerHTML = 
+                    `${username.toUpperCase()} <span class="text-danger" style="font-size: 0.7rem;">(ERROR)</span>`;
+            }
+            
+            const rpElem = card.querySelector('.rp-value');
+            if (rpElem) {
+                rpElem.innerHTML = '<span class="text-danger" style="font-size: 0.6rem;">Failed</span>';
+            }
+        }
+        
+        function updateCardOverview(cardId, playerData, isMainPlayer) {
+            const card = document.getElementById(`card-${cardId}`);
+            if (!card || playerData.error) return;
+            
+            card.classList.remove('placeholder-glow');
+            
+            const nameDisplay = isMainPlayer 
+                ? `${playerData.username.toUpperCase()} <span class="text-secondary" style="font-size: 0.7rem;">(${playerData.platform.toUpperCase()})</span>`
+                : `${playerData.username.toUpperCase()} <span class="text-secondary" style="font-size: 0.65rem;">(${playerData.platform.toUpperCase()})</span>`;
+            
+            const nameElem = card.querySelector('.name');
+            if (nameElem) nameElem.innerHTML = nameDisplay;
+            
+            const rankImg = card.querySelector('.rank-image');
+            if (rankImg && playerData['Rank Image URL']) {
+                rankImg.src = playerData['Rank Image URL'];
+            }
+            
+            const rpElem = card.querySelector('.rp-value');
+            if (rpElem) rpElem.textContent = playerData['Rank Points'] || 'N/A';
+            
+            const levelElem = card.querySelector(`#level-value-${cardId}`);
+            if (levelElem) levelElem.textContent = playerData['Level'] || 'N/A';
+            
+            const timeElem = card.querySelector(`#time-played-value-${cardId}`);
+            if (timeElem) timeElem.textContent = playerData['Time Played'] || 'N/A';
+            
+            const matchesElem = card.querySelector(`#season-matches-value-${cardId}`);
+            if (matchesElem) matchesElem.textContent = playerData['Season Matches'] || 'N/A';
+            
+            const kdElement = card.querySelector(`#kd-value-${cardId}`);
+            if (kdElement) {
+                const kdValue = playerData['Season K/D'] || 'N/A';
+                kdElement.textContent = kdValue;
+                kdElement.className = 'stat-value ' + getColorClass(kdValue, 1, false);
+            }
+            
+            const winElement = card.querySelector(`#win-percent-value-${cardId}`);
+            if (winElement) {
+                const winValue = playerData['Season Win Rate'] || 'N/A';
+                winElement.textContent = winValue;
+                winElement.className = 'stat-value ' + getColorClass(winValue, 50, true);
+            }
+            
+            const bestRankContainer = card.querySelector(`#best-rank-value-${cardId}`);
+            if (bestRankContainer) {
+                if (playerData['Best Rank Name'] && playerData['Best Rank Name'] !== 'N/A') {
+                    let bestRankHtml = '';
+                    if (playerData['Best Rank Image URL']) {
+                        bestRankHtml += `<img src="${playerData['Best Rank Image URL']}" class="best-rank-img" alt="${playerData['Best Rank Name']}">`;
+                    }
+                    const rankNameShort = playerData['Best Rank Name'].split(' ').slice(0, 2).join(' ');
+                    bestRankHtml += `<span style="font-size: 0.6rem;">${rankNameShort}</span>`;
+                    bestRankContainer.innerHTML = bestRankHtml;
+                } else {
+                    bestRankContainer.textContent = 'N/A';
+                }
+            }
+        }
+        
+        function updateCardOperators(cardId, operators) {
+            const topOpsList = document.querySelector(`#top-ops-list-${cardId}`);
+            if (!topOpsList) return;
+            
+            topOpsList.innerHTML = '';
+            
+            if (operators && operators.length > 0) {
+                operators.forEach(op => {
+                    const opHtml = `
+                        <li>
+                            ${op['Image URL'] ? `<img src="${op['Image URL']}" alt="${op.Name}">` : ''}
+                            <div class="operator-name">${op.Name}</div>
+                            <div class="operator-stat">R: ${op['Rounds Played'] || 'N/A'}</div>
+                            <div class="operator-stat">K/D: ${op['K/D'] || 'N/A'}</div>
+                            <div class="operator-stat">W: ${op['Win %'] || 'N/A'}</div>
+                        </li>
+                    `;
+                    topOpsList.innerHTML += opHtml;
+                });
+            } else {
+                topOpsList.innerHTML = '<li style="font-size: 0.65rem; width: 100%;">No data</li>';
             }
         }
 
         function openEditModal() {
-            // Generate form for allies
             const alliesDiv = document.getElementById('allies-inputs');
             alliesDiv.innerHTML = '';
             
             for (let i = 1; i <= 4; i++) {
-                const ally = currentData && currentData.allies && currentData.allies[i-1] 
-                    ? currentData.allies[i-1] 
+                const ally = initialConfig && initialConfig.allies && initialConfig.allies[i-1] 
+                    ? initialConfig.allies[i-1] 
                     : { username: '', platform: 'psn' };
+                
+                const savedBadge = ally.username ? '<span style="color: #00FF7F; font-size: 0.8rem;"> ✓ Saved</span>' : '';
                 
                 alliesDiv.innerHTML += `
                     <div class="player-input-group">
-                        <label>Ally ${i}</label>
+                        <label>Ally ${i}${savedBadge}</label>
                         <div class="input-row">
-                            <input type="text" id="ally${i}-username" placeholder="Username (empty to skip)" value="${ally.username || ''}">
+                            <input type="text" 
+                                id="ally${i}-username" 
+                                placeholder="Username (empty to skip)" 
+                                value="${ally.username || ''}"
+                                ${ally.username ? 'style="border: 2px solid #00FF7F;"' : ''}>
                             <select id="ally${i}-platform">
                                 <option value="psn" ${ally.platform === 'psn' ? 'selected' : ''}>PSN</option>
                                 <option value="xbox" ${ally.platform === 'xbox' ? 'selected' : ''}>Xbox</option>
@@ -453,7 +952,6 @@
                 `;
             }
             
-            // Generate form for enemies
             const enemiesDiv = document.getElementById('enemies-inputs');
             enemiesDiv.innerHTML = '';
             
@@ -464,9 +962,13 @@
                 
                 enemiesDiv.innerHTML += `
                     <div class="player-input-group enemy">
-                        <label>Enemy ${i}</label>
+                        <label>Enemy ${i} ${i === 1 ? '<span style="color: #FF6347; font-size: 0.8rem;">← Start here!</span>' : ''}</label>
                         <div class="input-row">
-                            <input type="text" id="enemy${i}-username" placeholder="Username (empty to skip)" value="${enemy.username || ''}">
+                            <input type="text" 
+                                id="enemy${i}-username" 
+                                placeholder="Type enemy username..." 
+                                value="${enemy.username || ''}"
+                                ${i === 1 ? 'autofocus' : ''}>
                             <select id="enemy${i}-platform">
                                 <option value="psn" ${enemy.platform === 'psn' ? 'selected' : ''}>PSN</option>
                                 <option value="xbox" ${enemy.platform === 'xbox' ? 'selected' : ''}>Xbox</option>
@@ -485,7 +987,6 @@
         }
 
         async function saveAndRescrape() {
-            // Collect data from form
             const allies = [];
             for (let i = 1; i <= 4; i++) {
                 const username = document.getElementById(`ally${i}-username`).value.trim();
@@ -504,6 +1005,12 @@
                 }
             }
             
+            if (enemies.length === 0) {
+                alert('⚠️ Add at least 1 enemy player to start!');
+                document.getElementById('enemy1-username').focus();
+                return;
+            }
+            
             const payload = {
                 allies: allies,
                 enemies: enemies,
@@ -512,7 +1019,6 @@
             
             console.log('📤 Sending configuration:', payload);
             
-            // Send to server
             try {
                 const response = await fetch('/api/update_players', {
                     method: 'POST',
@@ -522,15 +1028,11 @@
                     body: JSON.stringify(payload)
                 });
                 
-                console.log('📥 Response status:', response.status);
-                console.log('📥 Response headers:', response.headers.get('Content-Type'));
-                
-                // Verify it's JSON
                 const contentType = response.headers.get('Content-Type');
                 if (!contentType || !contentType.includes('application/json')) {
                     const textResponse = await response.text();
                     console.error('❌ Response is not JSON:', textResponse.substring(0, 500));
-                    alert('Server error: invalid response. Check browser console and Python terminal.');
+                    alert('Server error: invalid response.');
                     return;
                 }
                 
@@ -539,41 +1041,22 @@
                 
                 if (result.success) {
                     console.log('✓ Configuration updated:', result);
+                    
+                    // Update currentData with new configuration
+                    currentData.allies = allies;
+                    currentData.enemies = enemies;
+                    
                     closeEditModal();
                     
-                    // Reset cards with placeholders
-                    document.getElementById('team-allies-row').innerHTML = '';
-                    document.getElementById('team-enemies-row').innerHTML = '';
-                    generatePlayerCards(getPlaceholderData(), true);
-                    generatePlayerCards(getPlaceholderData(true), false);
-                    
-                    // Recall scraping
-                    fetchData();
+                    // Smart loading: only load changed players
+                    fetchDataProgressive();
                 } else {
                     alert('Update error: ' + result.error);
                 }
             } catch (error) {
                 console.error('❌ Complete error:', error);
-                alert('Connection error: ' + error.message + '\n\nCheck browser console (F12) for more details.');
+                alert('Connection error: ' + error.message);
             }
-        }
-        
-        function updateAllCards(data) {
-            if (data.main) {
-                updateCard(1, data.main, true);
-            }
-            
-            data.allies.forEach((ally, index) => {
-                const cardId = index + 2;
-                updateCard(cardId, ally, false);
-            });
-            
-            data.enemies.forEach((enemy, index) => {
-                const cardId = index + 6;
-                updateCard(cardId, enemy, false);
-            });
-            
-            console.log('[DEBUG] All cards updated:', data);
         }
         
         function getColorClass(value, threshold, isPercentage = false) {
@@ -591,121 +1074,12 @@
             return numValue >= threshold ? 'stat-good' : 'stat-bad';
         }
         
-        function updateCard(cardId, playerData, isMainPlayer) {
-            const card = document.getElementById(`card-${cardId}`);
-            if (!card) {
-                console.warn(`[WARNING] Card ${cardId} not found`);
-                return;
-            }
-
-            if (playerData.error) {
-                card.classList.remove('placeholder-glow');
-                card.querySelector('.name').innerHTML = 
-                    `${playerData.username.toUpperCase()} <span class="text-danger">(ERROR)</span>`;
-                card.querySelector(`#rp-value-${cardId}`).innerHTML = '<span class="text-danger">N/A</span>';
-                console.error(`[ERROR] Card ${cardId}: ${playerData.error}`);
-                return;
-            }
-
-            card.classList.remove('placeholder-glow');
-            
-            const nameDisplay = isMainPlayer 
-                ? `${playerData.username.toUpperCase()} <span class="text-secondary">(${playerData.platform.toUpperCase()})</span>`
-                : `${playerData.username.toUpperCase()} <span class="text-secondary" style="font-size: 0.7rem;">(${playerData.platform.toUpperCase()})</span>`;
-            
-            card.querySelector('.name').innerHTML = nameDisplay;
-            
-            if (playerData['Rank Image URL']) {
-                card.querySelector('.rank-image').src = playerData['Rank Image URL'];
-            }
-            
-            card.querySelector(`#rp-value-${cardId}`).textContent = playerData['Rank Points'] || 'N/A';
-            card.querySelector(`#level-value-${cardId}`).textContent = playerData['Level'] || 'N/A';
-            card.querySelector(`#time-played-value-${cardId}`).textContent = playerData['Time Played'] || 'N/A';
-            card.querySelector(`#season-matches-value-${cardId}`).textContent = playerData['Season Matches'] || 'N/A';
-            
-            const kdElement = card.querySelector(`#kd-value-${cardId}`);
-            const kdValue = playerData['Season K/D'] || 'N/A';
-            kdElement.textContent = kdValue;
-            kdElement.className = 'stat-value ' + getColorClass(kdValue, 1, false);
-            
-            const winElement = card.querySelector(`#win-percent-value-${cardId}`);
-            const winValue = playerData['Season Win Rate'] || 'N/A';
-            winElement.textContent = winValue;
-            winElement.className = 'stat-value ' + getColorClass(winValue, 50, true);
-            
-            const bestRankContainer = card.querySelector(`#best-rank-value-${cardId}`);
-            if (playerData['Best Rank Name'] && playerData['Best Rank Name'] !== 'N/A') {
-                let bestRankHtml = '';
-                if (playerData['Best Rank Image URL']) {
-                    bestRankHtml += `<img src="${playerData['Best Rank Image URL']}" class="best-rank-img" alt="${playerData['Best Rank Name']}">`;
-                }
-                const rankNameShort = playerData['Best Rank Name'].split(' ').slice(0, 2).join(' ');
-                bestRankHtml += `<span style="font-size: 0.65rem;">${rankNameShort}</span>`;
-                bestRankContainer.innerHTML = bestRankHtml;
-            } else {
-                bestRankContainer.textContent = 'N/A';
-            }
-            
-            const topOpsList = card.querySelector(`#top-ops-list-${cardId}`);
-            topOpsList.innerHTML = '';
-            
-            if (playerData['Top Operators'] && playerData['Top Operators'].length > 0) {
-                playerData['Top Operators'].forEach(op => {
-                    const opHtml = `
-                        <li>
-                            ${op['Image URL'] ? `<img src="${op['Image URL']}" alt="${op.Name}">` : ''}
-                            <div class="operator-name">${op.Name}</div>
-                            <div class="operator-stat">R: ${op['Rounds Played'] || 'N/A'}</div>
-                            <div class="operator-stat">K/D: ${op['K/D'] || 'N/A'}</div>
-                            <div class="operator-stat">W: ${op['Win %'] || 'N/A'} | HS: ${op['HS %'] || 'N/A'}</div>
-                        </li>
-                    `;
-                    topOpsList.innerHTML += opHtml;
-                });
-            } else {
-                topOpsList.innerHTML = '<li style="font-size: 0.65rem; width: 100%;">N/A</li>';
-            }
-            
-            const matchTable = card.querySelector(`#match-table-${cardId} tbody`);
-            matchTable.innerHTML = '';
-            
-            if (playerData['Last Matches'] && playerData['Last Matches'].length > 0) {
-                playerData['Last Matches'].forEach(match => {
-                    const result = match.Result || '?';
-                    const resultClass = result === 'Win' ? 'text-success' : (result === 'Loss' ? 'text-danger' : 'text-secondary');
-                    const resultIcon = result === 'Win' ? '✓' : (result === 'Loss' ? '✗' : '?');
-                    const mapShort = (match.Map || 'N/A').substring(0, 8);
-                    const score = match.Score || 'N/A';
-                    const kd = match['K/D'] || 'N/A';
-                    
-                    const kdColorClass = getColorClass(kd, 1, false);
-                    
-                    const tooltip = `${match.Map} | ${match.Mode} | KDA: ${match.Kills}/${match.Deaths}/${match.Assists} | HS: ${match['HS%']}`;
-                    
-                    matchTable.innerHTML += `
-                        <tr title="${tooltip}">
-                            <td class="${resultClass}" style="font-weight: bold;">${resultIcon}</td>
-                            <td style="color: #FFD700;">${mapShort}</td>
-                            <td style="color: #A0A0A0;">${score}</td>
-                            <td class="${kdColorClass}">${kd}</td>
-                        </tr>
-                    `;
-                });
-            } else {
-                matchTable.innerHTML = '<tr><td colspan="4" class="text-center" style="font-size: 0.6rem; color: #666; padding: 5px;">N/A</td></tr>';
-            }
-
-            console.log(`[DEBUG] Card ${cardId} updated:`, playerData.username);
-        }
-
-
         function createCardHTML(playerData, isMainPlayer = false, isEnemy = false, cardId) {
             const isPlaceholder = playerData.isPlaceholder;
             const playerClass = isMainPlayer ? 'main-player' : (isEnemy ? 'enemy-player' : '');
             
             const nameDisplay = isMainPlayer 
-                ? `${playerData.username.toUpperCase()} <span class="text-secondary">(${playerData.platform.toUpperCase()})</span>` 
+                ? `${playerData.username.toUpperCase()} <span class="text-secondary" style="font-size: 0.7rem;">(${playerData.platform.toUpperCase()})</span>` 
                 : playerData.username.toUpperCase();
             const rankImageUrl = playerData['Rank Image URL'];
             const rpValue = playerData['Rank Points'];
@@ -734,83 +1108,84 @@
             let matchTableHtml = '';
             if (isPlaceholder || lastMatches.length === 0) {
                 matchTableHtml = `<tr><td colspan="4" class="text-center" style="font-size: 0.6rem; color: #666;">Loading...</td></tr>`;
+            }
+            
+            let playerType, playerIndex;
+            if (isMainPlayer) {
+                playerType = 'main';
+                playerIndex = 0;
+            } else if (!isEnemy) {
+                playerType = 'ally';
+                playerIndex = cardId - 1;
             } else {
-                matchTableHtml = lastMatches.map(match => {
-                    const result = match.Result || '?';
-                    const resultClass = result === 'Win' ? 'text-success' : (result === 'Loss' ? 'text-danger' : 'text-secondary');
-                    const resultIcon = result === 'Win' ? '✓' : (result === 'Loss' ? '✗' : '?');
-                    return `
-                        <tr>
-                            <td class="${resultClass}" style="font-weight: bold;">${resultIcon}</td>
-                            <td style="color: #FFD700;">?</td>
-                            <td style="color: #A0A0A0;">?</td>
-                            <td>?</td>
-                        </tr>
-                    `;
-                }).join('');
+                playerType = 'enemy';
+                playerIndex = cardId - 5;
             }
 
             return `
-                <div class="col-five">
-                    <div class="player-card ${playerClass} ${glowClass}" id="card-${cardId}">
-                        <div class="card-header-compact">
-                            <img src="${rankImageUrl}" alt="Rank" class="rank-image rounded-circle">
-                            <div class="name">${nameDisplay}</div>
-                            <div class="rp-value" id="rp-value-${cardId}">${rpValue}</div>
+                <div class="player-card ${playerClass} ${glowClass}" id="card-${cardId}">
+                    <div class="card-header-compact">
+                        <img src="${rankImageUrl}" alt="Rank" class="rank-image rounded-circle">
+                        <div class="name">${nameDisplay}</div>
+                        <div class="rp-value" id="rp-value-${cardId}">${rpValue}</div>
+                        <button onclick="refreshPlayer('${playerType}', ${playerIndex}, ${cardId})" 
+                                class="btn-refresh" 
+                                title="Refresh player data">
+                            ⟳
+                        </button>
+                    </div>
+                    
+                    <div class="row text-center g-1 mb-2">
+                        <div class="col-4">
+                            ${placeholderContent(levelValue, 'level-value')}
+                            <div class="stat-label">LEVEL</div>
                         </div>
-                        
-                        <div class="row text-center compact-stats g-1 mb-2">
-                            <div class="col-4">
-                                ${placeholderContent(levelValue, 'level-value')}
-                                <div class="stat-label">LEVEL</div>
-                            </div>
-                            <div class="col-4">
-                                ${placeholderContent(timePlayedValue, 'time-played-value')}
-                                <div class="stat-label">TIME</div>
-                            </div>
-                            <div class="col-4">
-                                ${placeholderContent(bestRankValue, 'best-rank-value')}
-                                <div class="stat-label">BEST RANK</div>
-                            </div>
+                        <div class="col-4">
+                            ${placeholderContent(timePlayedValue, 'time-played-value')}
+                            <div class="stat-label">TIME</div>
                         </div>
-                        
-                        <div class="row text-center compact-stats g-1 pb-2 border-bottom border-secondary">
-                            <div class="col-4">
-                                ${placeholderContent(kdValue, 'kd-value')}
-                                <div class="stat-label">K/D</div>
-                            </div>
-                            <div class="col-4">
-                                ${placeholderContent(winValue, 'win-percent-value')}
-                                <div class="stat-label">WIN %</div>
-                            </div>
-                            <div class="col-4">
-                                ${placeholderContent(seasonMatchesValue, 'season-matches-value')}
-                                <div class="stat-label">MATCHES</div>
-                            </div>
+                        <div class="col-4">
+                            ${placeholderContent(bestRankValue, 'best-rank-value')}
+                            <div class="stat-label">BEST RANK</div>
                         </div>
+                    </div>
+                    
+                    <div class="row text-center g-1 pb-2 border-bottom border-secondary">
+                        <div class="col-4">
+                            ${placeholderContent(kdValue, 'kd-value')}
+                            <div class="stat-label">K/D</div>
+                        </div>
+                        <div class="col-4">
+                            ${placeholderContent(winValue, 'win-percent-value')}
+                            <div class="stat-label">WIN %</div>
+                        </div>
+                        <div class="col-4">
+                            ${placeholderContent(seasonMatchesValue, 'season-matches-value')}
+                            <div class="stat-label">MATCHES</div>
+                        </div>
+                    </div>
 
-                        <div class="extra-stats">
-                            <div class="stat-label text-center mb-1">TOP 4 OPERATORS</div>
-                            <ul class="operator-list" id="top-ops-list-${cardId}">
-                                ${opListHtml}
-                            </ul>
-                            
-                            <div class="stat-label text-center mt-2 mb-1">LAST 4 MATCHES</div>
-                            <div class="match-table-container">
-                                <table class="match-table" id="match-table-${cardId}">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 15%;">R</th>
-                                            <th style="width: 35%;">MAP</th>
-                                            <th style="width: 25%;">SCORE</th>
-                                            <th style="width: 25%;">K/D</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${matchTableHtml}
-                                    </tbody>
-                                </table>
-                            </div>
+                    <div class="extra-stats">
+                        <div class="stat-label text-center mb-1">TOP 4 OPERATORS</div>
+                        <ul class="operator-list" id="top-ops-list-${cardId}">
+                            ${opListHtml}
+                        </ul>
+                        
+                        <div class="stat-label text-center mt-2 mb-1">LAST 4 MATCHES</div>
+                        <div class="match-table-container">
+                            <table class="match-table" id="match-table-${cardId}">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">R</th>
+                                        <th style="width: 35%;">MAP</th>
+                                        <th style="width: 25%;">SCORE</th>
+                                        <th style="width: 25%;">K/D</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${matchTableHtml}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -843,7 +1218,6 @@
             }
         }
 
-        // Close modal by clicking outside
         document.addEventListener('click', (e) => {
             const modal = document.getElementById('editModal');
             if (e.target === modal) {
