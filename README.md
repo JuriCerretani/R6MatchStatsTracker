@@ -27,15 +27,16 @@ Automatically scrape and display statistics for all 10 players in your Rainbow S
 ```bash
 git clone https://github.com/JuriCerretani/R6MatchStatsTracker.git
 cd R6MatchStatsTracker
+```
 
 2. Run launcher:
 ```bash
-START_R6_TRACKER.bat
-
+R6TRACKER.bat
+```
 Done! Browser opens automatically.
 
 ### Manual (All Platforms)
-```bashClone
+```bash
 git clone https://github.com/JuriCerretani/R6MatchStatsTracker.git
 cd R6MatchStatsTracker
 python -m venv venv
@@ -43,20 +44,21 @@ venv\Scripts\activate  # Windows
 source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txtRun
 python app.py
-
+```
 ---
 
 ## ⚙️ Configuration
 
 Create `config.txt`:
-```ini[main]
+```ini
+[main]
 platform: psn
 username: YourUsername[ally1]
 platform: psn
 username: Friend1[ally2]
 platform: xbox
 username: Friend2
-
+```
 **Platforms**: `psn`, `xbox`, `ubisoft`
 
 ---
