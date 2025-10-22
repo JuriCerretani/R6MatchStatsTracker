@@ -1,10 +1,10 @@
 [main]
-platform: psn
-username: Conitech1-_-
+platform: 
+username: 
 
 [ally1]
-platform: psn
-username: Snitch_Ciosba141
+platform: 
+username: 
 
 [ally2]
 platform: 
@@ -16,4 +16,5 @@ username:
 
 [ally4]
 platform: 
+
 username: 
